@@ -1,57 +1,75 @@
+
 const express = require('express')
 const app = express()
 const fs = require("fs")
 const bodyParser = require('body-parser')
-app.use( bodyParser.json() )
-app.use(bodyParser.urlencoded({  extended: true }))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('/', function (req, res) {
-   fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
-      res.end( data );
+   fs.readFile(__dirname + "/users.json", 'utf8', function (err, data) {
+      if (err) {
+         res.status(500).send("Error reading file");
+         return;
+      }
+      res.end(data);
    });
-})
+});
 
 app.get('/:id', function (req, res) {
-   fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
-      var users = JSON.parse( data );
-      //var user = users["user" + req.params.id]
-      var user = users[req.params.id] 	  
-     res.end( JSON.stringify(user));
+   fs.readFile(__dirname + "/users.json", 'utf8', function (err, data) {
+      if (err) {
+         res.status(500).send("Error reading file");
+         return;
+      }
+      var users = JSON.parse(data);
+      var user = users[req.params.id];
+      res.end(JSON.stringify(user));
    });
-})
-
+});
 
 app.post('/', function (req, res) {
-   fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
-      var users = JSON.parse( data );
+   fs.readFile(__dirname + "/users.json", 'utf8', function (err, data) {
+      if (err) {
+         res.status(500).send("Error reading file");
+         return;
+      }
+      var users = JSON.parse(data);
       var user = req.body.user4;
-      //users["user"+user.id] = user
-	  users[user.id] = user
-      res.end( JSON.stringify(users));
+      users[user.id] = user;
+      res.end(JSON.stringify(users));
    });
-})
+});
 
 app.delete('/:id', function (req, res) {
-   fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
-      data = JSON.parse( data );
-      //var id = "user"+req.params.id;
-	  var id = req.params.id;
-      var user = data[id];
-      //delete data[ "user"+req.params.id];
-	  delete data[ req.params.id];
-      res.end( JSON.stringify(data));
-   });
-})
-
-app.put("/:id", function(req, res) {
-      fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
-      
-      var users = JSON.parse( data );
-      //var id = "user"+req.params.id;
+   fs.readFile(__dirname + "/users.json", 'utf8', function (err, data) {
+      if (err) {
+         res.status(500).send("Error reading file");
+         return;
+      }
+      data = JSON.parse(data);
       var id = req.params.id;
-      users[id]=req.body;
-      res.end( JSON.stringify(users));
-   })
-})
+      var user = data[id];
+      delete data[id];
+      res.end(JSON.stringify(data));
+   });
+});
 
-app.listen(3000, () => console.log("Express App running at http://127.0.0.1:3000/"))
+app.put("/:id", function (req, res) {
+   fs.readFile(__dirname + "/users.json", 'utf8', function (err, data) {
+      if (err) {
+         res.status(500).send("Error reading file");
+         return;
+      }
+      var users = JSON.parse(data);
+      var id = req.params.id;
+      users[id] = req.body;
+      res.end(JSON.stringify(users));
+   });
+});
+
+// Use dynamic port for compatibility with Render
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+   console.log(`Server running on port ${port}`);
+});
