@@ -1,0 +1,19 @@
+{
+   "testuser1" : {
+      "name" : "Test User 1",
+      "profession" : "teacher",
+      "id": "testuser1"
+   },
+   
+   "testuser2" : {
+      "name" : "Test User 2",
+      "profession" : "librarian",
+      "id": "testuser2"
+   },
+   
+   "testuser3" : {
+      "name" : "Test User 3",
+      "profession" : "clerk",
+      "id": "testuser3"
+   }
+}
